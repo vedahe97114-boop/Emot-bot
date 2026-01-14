@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>Emot Bot Unlock</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Monetag -->
+<script src='//libtl.com/sdk.js' data-zone='10462439' data-sdk='show_10462439'></script>
+
+<style>
+body{
+    margin:0;
+    font-family:sans-serif;
+    background:#020617;
+    color:white;
+}
+.page{
+    display:none;
+    padding:20px;
+}
+.page.active{display:block}
+h1,h2{text-align:center}
+.container{max-width:420px;margin:auto}
+
+button{
+    width:100%;
+    padding:15px;
+    margin:8px 0;
+    border:none;
+    border-radius:14px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.locked{background:#334155;color:#94a3b8}
+.unlocked{background:#16a34a;color:white}
+.disabled{background:#475569;color:#94a3b8}
+
+.timer{text-align:center;margin:15px;font-size:18px}
+
+.card{
+    background:#0f172a;
+    padding:20px;
+    border-radius:14px;
+    text-align:center;
+}
+.back{
+    background:#2563eb;
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- HOME PAGE -->
+<div class="page active" id="home">
+<h1>🔐 Emot Bot Unlock</h1>
+
+<div class="container">
+
+<button class="locked" onclick="openAd(0)">Lock 1 🔒</button>
+<button class="locked" onclick="openAd(1)">Lock 2 🔒</button>
+<button class="locked" onclick="openAd(2)">Lock 3 🔒</button>
+<button class="locked" onclick="openAd(3)">Lock 4 🔒</button>
+<button class="locked" onclick="openAd(4)">Lock 5 🔒</button>
+
+<div class="timer" id="timer">⏳ Locked</div>
+
+<button id="keyBtn" class="disabled" onclick="openKey()">Emot Bot Key 🔑</button>
+<button id="siteBtn" class="disabled" onclick="openSite()">Emot Bot Site 🌐</button>
+
+</div>
+</div>
+
+<!-- KEY PAGE -->
+<div class="page" id="keyPage">
+<h2>🔑 Emot Bot Key</h2>
+
+<div class="container">
+<div class="card">
+<p>YouTube pass ⏩ <b>B25</b></p>
+<p>Telegram pass ⏩ <b>B25</b></p>
+</div>
+
+<button class="back" onclick="goHome()">⬅ Back</button>
+</div>
+</div>
+
+<script>
+const ads=[
+"https://www.effectivegatecpm.com/k4efhfg8?key=5f6f77e7c3f91de5f3084f8941946aaa",
+"https://otieu.com/4/10461211",
+"https://otieu.com/4/10461219",
+"https://otieu.com/4/10461214",
+"https://www.effectivegatecpm.com/k4efhfg8?key=5f6f77e7c3f91de5f3084f8941946aaa"
+];
+
+let unlocked = JSON.parse(localStorage.getItem("unlocked")) || [false,false,false,false,false];
+let expire = localStorage.getItem("expire");
+
+const lockBtns=document.querySelectorAll("#home .container button");
+
+function openAd(i){
+    if(unlocked[i]) return;
+    localStorage.setItem("last",i);
+    window.location.href=ads[i];
+}
+
+window.onload=()=>{
+    let last=localStorage.getItem("last");
+    if(last!==null){
+        unlocked[last]=true;
+        localStorage.setItem("unlocked",JSON.stringify(unlocked));
+        localStorage.removeItem("last");
+    }
+    checkAll();
+    startTimer();
+}
+
+function checkAll(){
+    unlocked.forEach((v,i)=>{
+        lockBtns[i].className=v?"unlocked":"locked";
+        lockBtns[i].innerText=v?`Lock ${i+1} 🔓`:`Lock ${i+1} 🔒`;
+    });
+
+    if(unlocked.every(v=>v)){
+        if(!expire){
+            expire=Date.now()+12*60*60*1000;
+            localStorage.setItem("expire",expire);
+        }
+        keyBtn.className="unlocked";
+        siteBtn.className="unlocked";
+    }
+}
+
+function startTimer(){
+    setInterval(()=>{
+        if(!expire) return;
+        let left=expire-Date.now();
+        if(left<=0){
+            localStorage.clear();
+            location.reload();
+        }else{
+            let h=Math.floor(left/3600000);
+            let m=Math.floor(left/60000)%60;
+            let s=Math.floor(left/1000)%60;
+            timer.innerText=`⏳ ${h}:${m}:${s}`;
+        }
+    },1000);
+}
+
+function openKey(){
+    if(!expire) return;
+    showPage("keyPage");
+}
+function openSite(){
+    if(!expire) return;
+    window.location.href="https://ffemote.com/login";
+}
+
+function goHome(){
+    showPage("home");
+}
+function showPage(id){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+</script>
+
+</body>
+</html>
